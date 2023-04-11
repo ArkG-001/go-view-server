@@ -1,7 +1,62 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 const { VERSION } = require('../config')
-const { date_fmt } = require('../utils/datetime_kit');
+const { date_fmt } = require('../utils/datetime_kit')
+
+router.get('/endpoints', function (req, res, next) {
+  let list = global.endpoints
+  res.json(list)
+})
+
+router.get('/api_list', function (req, res, next) {
+  let list = global.endpoints
+  let api_table = ''
+  list.forEach(it => {
+    api_table += `<tr>
+    <td>${it.path}</td>
+    <td>${it.methods}</td>
+    <td></td>
+    </tr>`
+  })
+  let html_str = `<html>
+<head>
+<title>LedWebApi</title>
+<style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th {
+        text-align: left;
+        padding: 8px;
+      },
+      td {
+        text-align: left;
+        padding: 8px;
+        font-size: 12px;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    </style>
+</head>
+<body>
+    <div>
+      <h3>LedWebApi列表详情</h3>
+      <table>
+        <tr>
+          <th>路径</th>
+          <th>Method</th>
+          <th>备注</th>
+        </tr>
+      ${api_table}
+      </table>
+    </div>
+  </body>
+</html>
+`
+  res.send(html_str)
+})
 
 router.get('/debug', function (req, res, next) {
   res.send(`<html>
@@ -73,6 +128,6 @@ router.get('/debug', function (req, res, next) {
     </script>
 </body>
 </html>`)
-});
+})
 
-module.exports = router;
+module.exports = router

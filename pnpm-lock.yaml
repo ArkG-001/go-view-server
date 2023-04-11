@@ -7,6 +7,7 @@ specifiers:
   cors: ^2.8.5
   dayjs: ^1.11.7
   express: ^4.18.2
+  express-list-endpoints: ^6.0.0
   jsonwebtoken: ^9.0.0
   knex: ^2.4.2
   knex-paginate: ^3.0.2
@@ -25,6 +26,7 @@ dependencies:
   cors: registry.npmmirror.com/cors/2.8.5
   dayjs: registry.npmmirror.com/dayjs/1.11.7
   express: registry.npmmirror.com/express/4.18.2
+  express-list-endpoints: registry.npmmirror.com/express-list-endpoints/6.0.0
   jsonwebtoken: registry.npmmirror.com/jsonwebtoken/9.0.0
   knex: registry.npmmirror.com/knex/2.4.2_kgeznuzbguk4dfvvwny5w5eb6a
   knex-paginate: registry.npmmirror.com/knex-paginate/3.0.2_knex@2.4.2
@@ -732,6 +734,13 @@ packages:
     name: events
     version: 3.3.0
     engines: {node: '>=0.8.x'}
+    dev: false
+
+  registry.npmmirror.com/express-list-endpoints/6.0.0:
+    resolution: {integrity: sha512-1I30bSVego+AU/eSsX/bV2xrOXW5tFhsuXZp7wZd9396bAAxH7KHaAwLXQYra0Aw33xA67HmNiceGf2SOvXaLg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/express-list-endpoints/-/express-list-endpoints-6.0.0.tgz}
+    name: express-list-endpoints
+    version: 6.0.0
+    engines: {node: '>=10'}
     dev: false
 
   registry.npmmirror.com/express/4.18.2:

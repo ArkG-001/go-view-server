@@ -2,12 +2,22 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 require('./models')
+const listEndpoints = require('express-list-endpoints')
+const { getLocalIP } = require('./utils/ip')
+
+// 中间件函数来处理错误
+function errorHandler(err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).json({ code: 1, msg: err.message, data: {} })
+}
 
 const app = express()
 const PORT = process.env.PORT || 4444
 
+let ip = getLocalIP()
+
 var corsOptions = {
-  origin: `http://localhost:${PORT}`
+  origin: [`http://localhost:${PORT}`, `http://${ip}:${PORT}`]
 }
 
 app.use(cors(corsOptions))
@@ -18,7 +28,9 @@ app.use(bodyParser.json())
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// simple route
+// 添加 errorHandler 中间件
+app.use(errorHandler)
+
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to led application.' })
 })
@@ -26,11 +38,13 @@ app.get('/', (req, res) => {
 const routes = require('./routers')
 app.use(routes)
 
-// set port, listen for requests
+let endpoints = listEndpoints(app)
+global.endpoints = endpoints.sort((a, b) => a.path.localeCompare(b.path))
+
 app.listen(PORT, () => {
   console.log(`
-      ################################################
-      🛡️  Server listening on port: ${PORT} 🛡️
-      ################################################
+      ##############################################################
+      🛡️  Server listening on port: ${PORT}, http://${ip}:${PORT} 🛡️
+      ##############################################################
     `)
 })

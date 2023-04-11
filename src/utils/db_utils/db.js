@@ -1,4 +1,5 @@
 'use strict'
+
 const fs = require('fs')
 const path = require('path')
 const { Sequelize, DataTypes } = require('sequelize')
@@ -8,26 +9,24 @@ const Knex = require('knex')
 // 用于处理分页
 const { attachPaginate } = require('knex-paginate')
 
-// const cls = require('continuation-local-storage')
-// // https://itbilu.com/nodejs/npm/EJO6CcCM-.html#usage-manage
-// const namespace = cls.createNamespace('zl_green')
-// Sequelize.cls = namespace
+const getFileName = file => {
+  const extension = path.extname(file)
+  const fileName = path.basename(file, extension)
+  return fileName
+}
+
+function filterFile(file) {
+  // 获取文件后缀名
+  const extension = path.extname(file)
+  return file.indexOf('.') !== 0 && file !== 'index.js' && extension == '.js'
+}
 
 class DB {
   constructor(db_cfg, logger, debug = true) {
     //创建一个sequelize实例
     this.sequelize = new Sequelize(db_cfg.database, db_cfg.username, db_cfg.password, db_cfg.connect, {
-      // https://stackoverflow.com/questions/21427501/how-can-i-see-the-sql-generated-by-sequelize-js
       logging: logger.info,
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE
-      // Sequelize.Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED // "READ UNCOMMITTED"
-      // Sequelize.Transaction.ISOLATION_LEVELS.READ_COMMITTED // "READ COMMITTED"
-      // Sequelize.Transaction.ISOLATION_LEVELS.REPEATABLE_READ  // "REPEATABLE READ"
-      // Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE // "SERIALIZABLE"
-      // logging: log => {
-      //   console.log('dbLog: ', log)
-      //   return false
-      // } // 执行过程会打印一些sql的log，设为false就不会显示
     })
     this.tabs = []
     this.models = {}
@@ -111,24 +110,35 @@ class DB {
 
   async loadModel(_path) {
     fs.readdirSync(_path) //读取当前文件夹的文件
-      .filter(file => {
-        //过滤掉index.js，因为index.js就是这份代码
-        let fix = file.substring(file.lastIndexOf('.'), file.length) //后缀名
-        // logger.info(file, fix);
-        return file.indexOf('.') !== 0 && file !== 'index.js' && fix == '.js'
-      })
+      .filter(filterFile)
       .forEach(file => {
-        //import的方式创建model，并把它存储到db这个对象中
-        // let model = this.sequelize.import(path.join(_path, file)) // 5.x 版本写法
         let model = require(path.join(_path, file))(this.sequelize, DataTypes) // 6.x 版本写法
         this.models[model.name] = model
         this.tabs.push(model.name)
       })
   }
 
+  async load_model(_path) {
+    fs.readdirSync(_path) //读取当前文件夹的文件
+      .filter(filterFile)
+      .forEach(file => {
+        const model_path = path.join(_path, file)
+        const modelDef = require(model_path)
+        const modelName = modelDef.modelName || getFileName(file)
+        this.models[modelName] = modelDef
+        this.tabs.push(modelName)
+      })
+  }
+
   async loadModelList(_path_list) {
     _path_list.forEach(_path => {
       this.loadModel(_path)
+    })
+  }
+
+  async load_model_list(_path_list) {
+    _path_list.forEach(_path => {
+      this.load_model(_path)
     })
   }
 

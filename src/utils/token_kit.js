@@ -9,11 +9,15 @@ class JwtToken {
   }
 
   async createToken(user) {
-    if (user) {
-      const { id, username } = user
-      return await jwt.sign({ id: id, username: username, role: 'BIZ' }, this.secret, { expiresIn: this.expiresIn })
-    } else {
-      return await jwt.sign({ role: 'GUEST' }, this.secret, { expiresIn: this.expiresIn })
+    try {
+      if (user) {
+        const { id, username } = user
+        return await jwt.sign({ id: id, username: username, role: 'BIZ' }, this.secret, { expiresIn: this.expiresIn })
+      } else {
+        return await jwt.sign({ role: 'GUEST' }, this.secret, { expiresIn: this.expiresIn })
+      }
+    } catch (error) {
+      console.log('createToken error: ', error)
     }
   }
 

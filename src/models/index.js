@@ -11,7 +11,7 @@ const dbUtil = require('../utils/db_utils/db')(sequelizeConfig, logging, DEBUG)
 let all_model_list = [__dirname + '/self', __dirname + '/pf']
 
 // 加载model文件
-dbUtil.loadModelList(all_model_list)
+dbUtil.load_model_list(all_model_list)
 
 dbUtil.modelAssociate()
 
@@ -40,5 +40,6 @@ global.db = db
 module.exports = {
   sequelize,
   dbType,
-  dbName
+  dbName,
+  models
 }

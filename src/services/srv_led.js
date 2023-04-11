@@ -94,7 +94,8 @@ const project_upsert = async params => {
         data = await Led_Projects.findOne({ where: { id: id }, raw: true })
       }
     } else {
-      _params = { projectName, indexImage, remarks, state: -1, isDelete: -1, createTime: new Date() }
+      _params = { projectName, indexImage, remarks, state: -1, isDelete: -1 }
+      // _params = { projectName, indexImage, remarks, state: -1, isDelete: -1, createTime: new Date() }
       data = await Led_Projects.create(_params, { returning: true, raw: true })
     }
   } catch (err) {
@@ -114,7 +115,8 @@ const project_data_save = async ({ projectId, content: contentData }) => {
     if (data) {
       await Led_Projectdatas.update({ contentData: contentData }, { where: { id: data.id }, transaction: transaction })
     } else {
-      await Led_Projectdatas.create({ projectId: projectId, contentData: contentData, createTime: new Date() }, { transaction: transaction })
+      await Led_Projectdatas.create({ projectId: projectId, contentData: contentData }, { transaction: transaction })
+      // await Led_Projectdatas.create({ projectId: projectId, contentData: contentData, createTime: new Date() }, { transaction: transaction })
     }
     data = await Led_Projectdatas.findOne({ where: { projectId: projectId }, raw: true, transaction: transaction })
     await transaction.commit()

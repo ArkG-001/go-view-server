@@ -1,6 +1,5 @@
 'use strict'
 
-const { sessionExpiresIn, APP_SECRET, UPLOAD_PATH_LED } = require('../config')
 const fs = require('fs')
 const path = require('path')
 const multiparty = require('multiparty')
@@ -8,6 +7,7 @@ const moment = require('moment')
 const { pf_user } = db
 const srv_led = require('../services/srv_led')
 const File = require('../utils/File')
+const { sessionExpiresIn, APP_SECRET, UPLOAD_PATH_LED } = require('../config')
 const token_kit = require('../utils/token_kit')(sessionExpiresIn, APP_SECRET)
 
 const getOssInfo = async (req, res, next) => {
@@ -39,13 +39,13 @@ const login = async (req, res, next) => {
       res_data.msg = `未找到对应的用户${username}，请核查！`
       return res.json(res_data)
     }
-    // //密码验证
-    // let ok = await pf_user.validatePassword(password)
-    // if (!ok) {
-    //   res_data.code = 200
-    //   res_data.msg = `用户${username}登录密码密码不正确，请核查！`
-    //   return res.json(res_data)
-    // }
+    //密码验证
+    let ok = await pf_user.validatePassword(password, user.salt, user.password)
+    if (!ok) {
+      res_data.code = 200
+      res_data.msg = `用户${username}登录密码密码不正确，请核查！`
+      return res.json(res_data)
+    }
 
     let token = await token_kit.createToken(user)
     let userinfo = {
@@ -59,17 +59,17 @@ const login = async (req, res, next) => {
       posName: ''
     }
     // JWT有效期(分钟=默认120),
-    let ExpMinutes = 120
+    let ExpMinutes = 120 * 60 * 1000
     let _token = {
       tokenName: 'Authorization',
       tokenValue: 'Bearer ' + token,
       isLogin: true,
       loginId: user.id,
       loginType: 'login',
-      tokenTimeout: ExpMinutes * 60 * 1000,
-      sessionTimeout: ExpMinutes * 60 * 1000,
-      tokenSessionTimeout: ExpMinutes * 60 * 1000,
-      tokenActivityTimeout: ExpMinutes * 60 * 1000,
+      tokenTimeout: ExpMinutes,
+      sessionTimeout: ExpMinutes,
+      tokenSessionTimeout: ExpMinutes,
+      tokenActivityTimeout: ExpMinutes,
       loginDevice: '',
       tag: null
     }
@@ -78,6 +78,32 @@ const login = async (req, res, next) => {
     res_data.msg = '操作成功'
     res_data.code = 200
   } catch (error) {
+    console.log('error: ', error)
+    res_data.code = 500
+    res_data.msg = error
+  }
+  return res.json(res_data)
+}
+
+const updatePwd = async (req, res, next) => {
+  let res_data = { code: 0, msg: '', data: {} }
+  try {
+    let { id: user_id, password } = req.body
+    let user = await pf_user.findById(user_id)
+    if (!user) {
+      res_data.code = 200
+      res_data.msg = `未找到对应的用户${user_id}，请核查！`
+      return res.json(res_data)
+    }
+    let ok = await pf_user.updatePwd(user_id, password)
+    if (!ok) {
+      res_data.code = 200
+      res_data.msg = `用户${user_id}修改密码失败！`
+      return res.json(res_data)
+    }
+    res_data.msg = '操作成功'
+  } catch (error) {
+    console.log('error: ', error)
     res_data.code = 500
     res_data.msg = error
   }
@@ -219,7 +245,7 @@ const project_data_save = async (req, res, next) => {
     res_data.code = 200
     res_data.data = data
   } catch (error) {
-    console.log('error: ', error);
+    console.log('error: ', error)
     res_data.code = 500
     res_data.msg = error
   }
@@ -352,6 +378,7 @@ module.exports = {
   getOssInfo,
   login,
   logout,
+  updatePwd,
   project_list,
   project_by_id,
   project_create,

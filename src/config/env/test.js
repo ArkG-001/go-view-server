@@ -2,11 +2,11 @@
 
 const utils = require('./utils')
 
-const DB_HOST = '192.168.31.112'
+const DB_HOST = '192.168.31.44'
 const DB_PORT = 1433
-const DB_NAME = 'Ls'
+const DB_NAME = 'iMES'
 const DB_USER = 'sa'
-const DB_PWD = 'mes'
+const DB_PWD = 'root'
 
 const config = {
   sequelizeConfig: {
@@ -22,7 +22,7 @@ const config = {
           encrypt: false,
           trustServerCertificate: true
         },
-        // useUTC: true,
+        useUTC: true,
         multipleStatements: true,
         supportBigNumbers: true,
         bigNumberStrings: true,

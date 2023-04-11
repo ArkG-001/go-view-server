@@ -1,7 +1,11 @@
 'use strict'
 
-module.exports = function (sequelize, DataTypes) {
-  let tab = sequelize.define('api', {
+const { Sequelize, Model, DataTypes } = require('sequelize')
+const BaseModel = require('../../base/base_model')
+class api extends BaseModel {}
+
+api.init(
+  {
     id: {
       type: DataTypes.STRING(36),
       primaryKey: true,
@@ -10,7 +14,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     realm: {
       type: DataTypes.STRING(12)
-      //comment: '领域(mes,srm,scm,oa...)'
     },
     name: {
       type: DataTypes.STRING(128),
@@ -21,24 +24,19 @@ module.exports = function (sequelize, DataTypes) {
     },
     script: {
       type: DataTypes.STRING(2000)
-      //comment: 'mysql-配合spc进行配置'
     },
     use: {
       type: DataTypes.INTEGER,
       defaultValue: 0
-      //comment: '0未启用，1启用'
     },
     script_type: {
       type: DataTypes.STRING(1)
-      //comment: '0普通sql，1无返回值存储过程，2带返回值存储过程，3执行存储过程返回多个SELECT，9执行knex脚本'
     },
     exec_type: {
       type: DataTypes.STRING(32)
-      //comment: 'data:数据，exec：执行insert、update、delete'
     },
     exec_count: {
       type: DataTypes.BIGINT
-      //comment: 'api执行次数'
     },
     remark: {
       type: DataTypes.STRING(255)
@@ -51,7 +49,11 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(32),
       allowNull: true
     }
-  })
+  },
+  {
+    modelName: 'Led_Projectdatas', // 指定表名
+    timestamps: false // 默认禁用时间戳
+  }
+)
 
-  return tab
-}
+module.exports = api

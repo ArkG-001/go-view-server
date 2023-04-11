@@ -24,7 +24,7 @@ let config = {
   VERSION: _package.version,
   LOG_DIR: path.join(APP_ROOT, 'logs'),
   UPLOAD_PATH_LED: path.join(APP_ROOT, 'tmp/upload/led/'),
-  expiresIn: '240h',
+  sessionExpiresIn: '100y',
   SALT_WORK_FACTOR: 10,
   // api 返回前端的格式类型
   API_RES_TYPE: 'datagrid',
