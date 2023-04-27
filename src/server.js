@@ -16,8 +16,26 @@ const PORT = process.env.PORT || 4444
 
 let ip = getLocalIP()
 
-var corsOptions = {
-  origin: [`http://localhost:${PORT}`, `http://${ip}:${PORT}`]
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'POST,GET,PUT,PATCH,DELETE,OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  res.header('Access-Control-Allow-Credentials', 'true') // Add this line
+  next()
+})
+
+const corsOptions = {
+  origin: [
+    `http://localhost:${PORT}`,
+    `http://127.0.0.1:${PORT}`,
+    `http://${ip}:${PORT}`,
+    `http://localhost:8080`,
+    `http://127.0.0.1:8080`,
+    `http://${ip}:8080`,
+    `http://localhost:5500`,
+    `http://127.0.0.1:5500`,
+    `http://${ip}:5500`,
+  ]
 }
 
 app.use(cors(corsOptions))

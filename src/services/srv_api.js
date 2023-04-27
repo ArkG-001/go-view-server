@@ -8,15 +8,20 @@ const { dbHelper, dbType, knex, sequelize, api } = db
 // 根据 apiid获取相应的脚本
 const getScriptByApiId = async apiId => {
   let res_data = { script: '', script_type: '', exec_type: '', exec_count: 0 }
-  if (!apiId) return res_data
-  let attributes = ['script', 'script_type', 'exec_type', 'exec_count']
-  let data = await api.findOne({ attributes: attributes, where: { id: apiId }, raw: true })
+  try {
+    if (!apiId) return res_data
+    let attributes = ['script', 'script_type', 'exec_type', 'exec_count']
+    let data = await api.findOne({ attributes: attributes, where: { id: apiId }, raw: true })
 
-  if (!data) return res_data
-  let { script, script_type, exec_type, exec_count } = data
+    if (!data) return res_data
+    let { script, script_type, exec_type, exec_count } = data
 
-  exec_count = exec_count ? parseInt(exec_count) : 0
-  return { script, script_type, exec_type, exec_count }
+    exec_count = exec_count ? parseInt(exec_count) : 0
+    return { script, script_type, exec_type, exec_count }
+  } catch (error) {
+    console.log('getScriptByApiId error: ', error)
+    return res_data
+  }
 }
 
 const getScriptByFunId = async (btn_id, dev) => {
@@ -56,7 +61,6 @@ const getApiDataByApiId = async ({ apiId, params }) => {
 
 // 根据ApiId获取对应的数据
 const getApiData = async ({ script, script_type, params }) => {
-  console.log('script: ======================================', script)
   // 默认为0， sql模式
   script_type = script_type || '0'
   let res_data = { data: [], dbType: dbType, script_type: script_type }
@@ -105,11 +109,13 @@ const getApiData = async ({ script, script_type, params }) => {
 }
 
 const getDataByApiId = async ({ apiId, params, restype }) => {
+  console.log('apiId, params, restype: ', apiId, params, restype)
   let res_data = { data: [], dbType: dbType, script_type: '' }
   try {
     if (!apiId) return res_data
 
     let { script, script_type, exec_type, exec_count } = await getScriptByApiId(apiId)
+    console.log('script, script_type, exec_type, exec_count: ', script, script_type, exec_type, exec_count)
     res_data.script_type = script_type
     //如果未定义按钮 sql，直接返回空
     if (!script) return res_data

@@ -65,6 +65,12 @@ npm run sqlserver
 - mysql [db/mysql.sql](db/mysql.sql)
 - sqlserver [db/sqlserver.sql](db/sqlserver.sql)
 
+
+### 登录信息
+用户名:admin
+密码：123123
+关于默认密码的问题，请参考：[地址](https://www.cnblogs.com/egreen/p/17075035.html)
+
 ### 配置信息在[config](src/config/index.js)文件中定义
 数据库连接配置：
 ```javascript

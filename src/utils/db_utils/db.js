@@ -21,7 +21,7 @@ function filterFile(file) {
   return file.indexOf('.') !== 0 && file !== 'index.js' && extension == '.js'
 }
 
-class DB {
+exports.DB = class DB {
   constructor(db_cfg, logger, debug = true) {
     //创建一个sequelize实例
     this.sequelize = new Sequelize(db_cfg.database, db_cfg.username, db_cfg.password, db_cfg.connect, {
@@ -168,9 +168,4 @@ class DB {
       // force: true
     })
   }
-}
-
-module.exports = (db_cfg, logger = false) => {
-  let _db = new DB(db_cfg, logger)
-  return _db
 }

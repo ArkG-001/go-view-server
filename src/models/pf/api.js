@@ -51,7 +51,7 @@ api.init(
     }
   },
   {
-    modelName: 'Led_Projectdatas', // 指定表名
+    modelName: 'api', // 指定表名
     timestamps: false // 默认禁用时间戳
   }
 )

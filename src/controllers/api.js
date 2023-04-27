@@ -7,6 +7,7 @@ const Res = require('../utils/Res')
 const util = require('util')
 const { api } =db
 
+// http://localhost:4444/api/getDataByApiId?apiId=d318279e-c6c0-11ed-a3da-e86a64995474&line=H&station=50
 // http://localhost:4444/api/getDataByApiId?apiId=1&line=123
 // http://localhost:4444/api/getDataByApiId?restype=datagrid&apiId=1&line=123
 // http://localhost:4444/api/getDataByApiId?restype=amis&apiId=fd90f130-5ab7-11eb-be62-1546eb46c3e&company_id=287dd530-48d2-11ec-8d5c-0b6836c43e8a&plant_id=LT&line=LT_LINE1&station_no=&rows=10&page=1

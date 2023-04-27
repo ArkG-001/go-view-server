@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 
-class JwtToken {
+exports.JwtToken = class JwtToken {
   constructor(expiresIn, secret) {
     this.expiresIn = expiresIn
     this.secret = secret
@@ -38,8 +38,4 @@ class JwtToken {
       })
     }
   }
-}
-
-module.exports = (expiresIn, secret) => {
-  return new JwtToken(expiresIn, secret)
 }
