@@ -14,7 +14,8 @@ function errorHandler(err, req, res, next) {
 const app = express()
 const PORT = process.env.PORT || 4444
 
-let ip = getLocalIP()
+// let ip = getLocalIP()
+let ip = '192.168.1.144'
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')

@@ -6,11 +6,11 @@ const _package = require('../../../package.json')
 
 const APP_ROOT = process.cwd()
 
-const DB_HOST = '127.0.0.1'
+const DB_HOST = '124.223.46.72'
 const DB_PORT = 3306
-const DB_NAME = 'led'
+const DB_NAME = 'goview'
 const DB_USER = 'root'
-const DB_PWD = 'mes'
+const DB_PWD = '758121@Ghl'
 const APP_NAME = 'LED'
 // 是否开启结果集格式化
 const FMT_ROWS_DATE = false
